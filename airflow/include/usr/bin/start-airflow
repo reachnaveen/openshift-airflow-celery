@@ -1,0 +1,18 @@
+#!/usr/bin/env bash
+
+set -e
+
+# patch /etc/passwd file first
+/usr/bin/generate-container-user
+
+# make sure we have all the folders
+mkdir -p $AIRFLOW_HOME/dags && mkdir -p $AIRFLOW_HOME/logs
+
+if [[ -n $AIRFLOW__CORE__SQL_ALCHEMY_CONN  ]] && [[ $AIRFLOW_CMD =~ ^(webserver|scheduler|worker)$ ]]; then
+  echo " ---> Initializing airflow database..."
+  airflow initdb || true
+fi
+
+# execute airflow
+echo " ---> Starting airflow $AIRFLOW_CMD ..."
+airflow $AIRFLOW_CMD

@@ -1,0 +1,103 @@
+apiVersion: v1
+kind: List
+items:
+
+- kind: ImageStream
+  apiVersion: "v1"
+  metadata:
+    annotations:
+      description: A service for periodically syncing a git repository
+      tags: python, git
+    name: 'git-sync'
+
+- kind: "BuildConfig"
+  apiVersion: "v1"
+  metadata:
+    name: "git-sync" 
+  spec:
+    
+    runPolicy: "Serial" 
+    
+    triggers:
+      - type: ConfigChange
+      - github:
+          secret: git-sync
+        type: GitHub
+    
+    source: 
+      git:
+        uri: "https://github.com/majordomusio/git-sync"
+        ref: "master"
+    
+    strategy:
+      type: Docker
+      dockerStrategy:
+        dockerfilePath: Dockerfile
+        forcePull: true
+        
+    output:
+      to:
+        kind: ImageStreamTag
+        name: 'git-sync:latest'
+
+- kind: DeploymentConfig
+  apiVersion: "v1"
+  metadata:
+    annotations:
+      description: Defines how to deploy the Airflow scheduler
+      template.alpha.openshift.io/wait-for-ready: 'true'
+    name: 'git-sync'
+  spec:
+    replicas: 1
+    selector:
+      name: 'git-sync'
+    strategy: 
+        type: 'Rolling'
+    paused: false 
+    revisionHistoryLimit: 2 
+    minReadySeconds:
+            
+    template:
+      metadata:
+        labels:
+          name: 'git-sync'
+        name: 'git-sync'
+      spec:
+        containers:
+          - env:
+            - name: GIT_SYNC_REPO
+              value: 'https://github.com/reachnaveen/stufff-dags.git'
+            - name: GIT_SYNC_DEST
+              value: '/usr/local/app/dags'
+            - name: GIT_SYNC_BRANCH
+              value: 'master'
+            - name: GIT_SYNC_WAIT
+              value: '60'
+
+            image: ''
+            
+            name: 'git-sync'
+            
+            resources:
+              limits:
+                memory: '128Mi'
+
+            volumeMounts:
+              - mountPath: /usr/local/app
+                name: 'airflow-data'
+
+        volumes:
+          - name: 'airflow-data'
+            persistentVolumeClaim:
+              claimName: 'airflow'
+
+    triggers:
+      - imageChangeParams:
+          automatic: true
+          containerNames:
+            - 'git-sync'
+          from:
+            kind: ImageStreamTag
+            name: 'git-sync:latest'
+        type: ImageChange
+      - type: ConfigChange

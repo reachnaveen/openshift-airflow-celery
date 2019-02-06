@@ -1,0 +1,18 @@
+#!/usr/bin/env bash
+
+set -e
+
+USER_ID=$(id -u)
+GROUP_ID=$(id -g)
+
+if [ $GROUP_ID -eq 0 -a $USER_ID -ge 1001 ]; then
+
+    cat /etc/passwd | sed -e 's/^default:/x:/' > /tmp/passwd
+    echo "default:x:${USER_ID}:${GROUP_ID}:Default User:${HOME}:/sbin/nologin" >> /tmp/passwd
+
+    cat /tmp/passwd > /etc/passwd
+    rm /tmp/passwd
+
+fi
+
+# see https://github.com/jupyter/docker-stacks/issues/552

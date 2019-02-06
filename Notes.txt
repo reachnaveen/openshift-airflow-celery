@@ -1,0 +1,35 @@
+oc create role podview --verb=get --resource=pod -n airflow
+role "podview" created
+oc create role podcreate --verb=create --resource=pod -n airflow
+role "podcreate" created
+oc create role podwatch --verb=watch --resource=pod -n airflow
+role "podwatch" created
+
+
+oc create role podcrud --verb=get,create,list,watch,patch,delete,update --resource=pod -n airflow
+
+oc adm policy add-role-to-user podcrud system:serviceaccount:airflow:airflow --role-namespace=airflow -n airflow
+role "podcrud" added: "system:serviceaccount:airflow:airflow"
+oc adm policy add-role-to-user podcreate system:serviceaccount:airflow:airflow --role-namespace=airflow -n airflow
+role "podcreate" added: "system:serviceaccount:airflow:airflow"
+oc adm policy add-role-to-user podview system:serviceaccount:airflow:airflow --role-namespace=airflow -n airflow
+role "podview" added: "system:serviceaccount:airflow:airflow"
+oc adm policy add-role-to-user podwatch system:serviceaccount:airflow:airflow --role-namespace=airflow -n airflow
+role "podwatch" added: "system:serviceaccount:airflow:airflow"
+
+➜  openshift-airflow git:(master) ✗ cat role.yaml
+kind: Role
+apiVersion: rbac.authorization.k8s.io/v1
+metadata:
+  namespace: airflow
+  name: podlogsreader
+rules:
+- apiGroups: [""]
+  resources: ["pods", "pods/log"]
+  verbs: ["get", "list"]
+  
+oc create -f role.yaml
+role "podlogsreader" created
+oc adm policy add-role-to-user podlogsreader system:serviceaccount:airflow:airflow --role-namespace=airflow -n airflow
+role "podlogsreader" added: "system:serviceaccount:airflow:airflow"
+
