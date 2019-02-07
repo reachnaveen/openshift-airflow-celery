@@ -33,11 +33,12 @@ items:
               valueFrom:
                 secretKeyRef:
                   key: database-connection-string
-                  name: airflow-secrets
+                  name: airflow-secrets-celery
 
             - name: AIRFLOW__CORE__LOAD_EXAMPLES
               value: 'False'
-
+            - name: AIRFLOW__CORE__EXECUTOR
+              value: 'CeleryExecutor'
             image: ''
             
             ports:
@@ -63,7 +64,7 @@ items:
         volumes:
           - name: 'airflow-data'
             persistentVolumeClaim:
-              claimName: 'airflow'
+              claimName: 'airflow-celery'
 
     triggers:
       - imageChangeParams:
@@ -72,7 +73,7 @@ items:
             - 'airflow-webserver'
           from:
             kind: ImageStreamTag
-            name: 'airflow:1.10.11'
+            name: 'airflow:celery'
         type: ImageChange
       - type: ConfigChange
 

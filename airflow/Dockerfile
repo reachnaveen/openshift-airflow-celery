@@ -83,7 +83,7 @@ ENV AIRFLOW_VERSION=1.10.0 \
     AIRFLOW_HOME="/usr/local/app" \
     AIRFLOW_GPL_UNIDECODE="True" \
     AIRFLOW_CMD="webserver" \
-    AIRFLOW_MODULES=apache-airflow['crypto','celery','kubernetes','postgres','s3','gcp_api']
+    AIRFLOW_MODULES=apache-airflow['crypto','celery','kubernetes','postgres','s3','gcp_api',"redis", "async", "mysql"]
 
 ENV PYTHONPATH=${PYTHONPATH:+${PYTHONPATH}:}${AIRFLOW_HOME}
 

@@ -4,7 +4,7 @@ items:
 - kind: PersistentVolumeClaim
   apiVersion: "v1"
   metadata:
-    name: 'postgresql'
+    name: 'postgresql-celery'
   spec:
     accessModes:
       - ReadWriteOnce
@@ -15,7 +15,7 @@ items:
 - kind: PersistentVolumeClaim
   apiVersion: "v1"
   metadata:
-    name: 'airflow'
+    name: 'airflow-celery'
   spec:
     accessModes:
       - ReadWriteMany

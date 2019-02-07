@@ -18,7 +18,7 @@ items:
     
     source: 
       git:
-        uri: "https://github.com/reachnaveen/openshift-airflow.git"
+        uri: "https://github.com/reachnaveen/openshift-airflow-celery.git"
         ref: "master"
       contextDir: "airflow"
     
@@ -31,7 +31,7 @@ items:
     output:
       to:
         kind: ImageStreamTag
-        name: 'airflow:1.10.11'
+        name: 'airflow:celery'
 
 - kind: ImageStream
   apiVersion: "v1"

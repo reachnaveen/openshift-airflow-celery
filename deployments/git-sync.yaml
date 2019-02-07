@@ -89,7 +89,7 @@ items:
         volumes:
           - name: 'airflow-data'
             persistentVolumeClaim:
-              claimName: 'airflow'
+              claimName: 'airflow-celery'
 
     triggers:
       - imageChangeParams:

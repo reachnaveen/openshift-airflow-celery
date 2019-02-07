@@ -6,44 +6,33 @@ items:
     annotations:
       description: Defines how to deploy the database
       template.alpha.openshift.io/wait-for-ready: 'true'
-    name: 'postgresql'
+    name: 'redis'
   spec:
     replicas: 1
     selector:
-      name: 'postgresql'
+      name: 'redis'
     strategy:
       type: Recreate
     template:
       metadata:
         labels:
-          name: 'postgresql'
-        name: 'postgresql'
+          name: 'redis'
+        name: 'redis'
       spec:
         containers:
           - env:
-              - name: POSTGRESQL_USER
-                valueFrom:
-                  secretKeyRef:
-                    key: database-user
-                    name: airflow-secrets
-              - name: POSTGRESQL_PASSWORD
+              - name: REDIS_PASSWORD
                 valueFrom:
                   secretKeyRef:
                     key: database-password
                     name: airflow-secrets
-              - name: POSTGRESQL_DATABASE
-                value: 'root'
-              - name: POSTGRESQL_MAX_CONNECTIONS
-                value: '50'
-              - name: POSTGRESQL_SHARED_BUFFERS
-                value: '12MB'
             image: ' '
             livenessProbe:
               initialDelaySeconds: 30
               tcpSocket:
                 port: 5432
               timeoutSeconds: 1
-            name: postgresql
+            name: redis
             ports:
               - containerPort: 5432
             readinessProbe:
@@ -66,7 +55,7 @@ items:
         volumes:
           - name: 'postgresql-data'
             persistentVolumeClaim:
-              claimName: 'postgresql-celery'
+              claimName: 'postgresql'
     triggers:
       - imageChangeParams:
           automatic: true
@@ -84,7 +73,7 @@ items:
   metadata:
     annotations:
       description: Exposes the database server
-    name: 'postgresql-celery'
+    name: 'postgresql'
   spec:
     ports:
       - name: 'postgresql'
