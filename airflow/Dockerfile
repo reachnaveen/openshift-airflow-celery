@@ -44,6 +44,7 @@ ENV PATH=$HOME/.local/bin/:$PATH
 
 # Install the very basics
 RUN yum install -y dnf
+RUN yum install mariadb-libs-5.5.56-2.el7.i686
 
 # Additional packages
 ENV INSTALL_PKGS="autoconf automake make gcc patch unzip python3 python3-devel python3-setuptools python3-pip python3-virtualenv"  
@@ -108,6 +109,7 @@ RUN ${PIP_ALIAS} install 'redis>=2.10.5,<3' \
     && ${PIP_ALIAS} install pyOpenSSL \
     && ${PIP_ALIAS} install ndg-httpsclient \
     && ${PIP_ALIAS} install pyasn1
+
 
 # Create directories so we can own them when we mount volumes
 RUN mkdir -p ${AIRFLOW_HOME}/logs && mkdir -p ${AIRFLOW_HOME}/dags

@@ -28,12 +28,16 @@ items:
           - env:
             - name: AIRFLOW_CMD
               value: webserver
-
             - name: AIRFLOW__CORE__SQL_ALCHEMY_CONN
               valueFrom:
                 secretKeyRef:
                   key: database-connection-string
                   name: airflow-secrets-celery
+            - name: AIRFLOW__CELERY__RESULT_BACKEND
+              valueFrom:
+                secretKeyRef:
+                  key: database-connection-string
+                  name: airflow-redis-secrets-celery
 
             - name: AIRFLOW__CORE__LOAD_EXAMPLES
               value: 'False'
