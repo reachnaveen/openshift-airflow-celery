@@ -64,6 +64,7 @@ RUN useradd -u ${USER_ID} -r -g 0 -d ${HOME} -s /sbin/nologin \
     -c "Default User" ${USER_NAME} && \
     chown -R ${USER_ID}:0 ${HOME}
 
+
 # see https://github.com/jupyter/docker-stacks/issues/552
 RUN chmod 766 /etc/passwd && chmod 766 /etc/group
 
@@ -83,7 +84,7 @@ ENV AIRFLOW_VERSION=1.10.0 \
     AIRFLOW_HOME="/usr/local/app" \
     AIRFLOW_GPL_UNIDECODE="True" \
     AIRFLOW_CMD="webserver" \
-    AIRFLOW_MODULES=apache-airflow['crypto','celery','kubernetes','postgres','s3','gcp_api','redis']
+    AIRFLOW_MODULES=apache-airflow['all']
 
 ENV PYTHONPATH=${PYTHONPATH:+${PYTHONPATH}:}${AIRFLOW_HOME}
 
