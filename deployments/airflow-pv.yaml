@@ -4,6 +4,17 @@ items:
 - kind: PersistentVolumeClaim
   apiVersion: "v1"
   metadata:
+    name: 'redis-celery'
+  spec:
+    accessModes:
+      - ReadWriteOnce
+    resources:
+      requests:
+        storage: '1Gi'
+
+- kind: PersistentVolumeClaim
+  apiVersion: "v1"
+  metadata:
     name: 'postgresql-celery'
   spec:
     accessModes:

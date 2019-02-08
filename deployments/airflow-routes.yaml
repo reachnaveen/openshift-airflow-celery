@@ -8,7 +8,6 @@ items:
     annotations:
       kubernetes.io/tls-acme: "true"
   spec:
-    host: 'airflow.stufff.review'
     to:
       kind: Service
       name: 'airflow-webserver'

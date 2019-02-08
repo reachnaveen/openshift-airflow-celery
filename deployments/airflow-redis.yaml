@@ -25,8 +25,8 @@ items:
                 valueFrom:
                   secretKeyRef:
                     key: database-password
-                    name: airflow-secrets
-            image: ' '
+                    name: airflow-redis-secrets-celery
+            image: 'kubernetes/redis:v1'
             livenessProbe:
               initialDelaySeconds: 30
               tcpSocket:
@@ -41,9 +41,7 @@ items:
                   - /bin/sh
                   - '-i'
                   - '-c'
-                  - >-
-                    psql -h 127.0.0.1 -U ${POSTGRESQL_USER} -q -d
-                    root -c 'SELECT 1'
+                  - "test \"$(redis-cli -h 127.0.0.1 -a $REDIS_PASSWORD ping)\" == \"PONG\""
               initialDelaySeconds: 5
               timeoutSeconds: 1
             resources:
@@ -51,20 +49,19 @@ items:
                 memory: '512Mi'
             volumeMounts:
               - mountPath: /var/lib/pgsql/data
-                name: 'postgresql-data'
+                name: 'redis-data'
         volumes:
-          - name: 'postgresql-data'
+          - name: 'redis-data'
             persistentVolumeClaim:
-              claimName: 'postgresql'
+              claimName: 'redis-celery'
     triggers:
       - imageChangeParams:
           automatic: true
           containerNames:
-            - postgresql
+            - redis
           from:
             kind: ImageStreamTag
-            name: 'postgresql:10'
-            namespace: 'openshift'
+            name: 'redis:celery'
         type: ImageChange
       - type: ConfigChange
         
@@ -73,14 +70,14 @@ items:
   metadata:
     annotations:
       description: Exposes the database server
-    name: 'postgresql'
+    name: "redis"
   spec:
     ports:
-      - name: 'postgresql'
-        port: 5432
-        targetPort: 5432
+      - name: "redis"
+        port: 6379
+        targetPort: 6379
     selector:
-      name: 'postgresql'
+      name: "redis"
       
 kind: List
 metadata: []

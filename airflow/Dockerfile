@@ -100,7 +100,8 @@ RUN virtualenv-$PYTHON_VERSION ${AIRFLOW_HOME} && \
     chown -R ${USER_ID}:0 ${AIRFLOW_HOME} && \
     fix-permissions ${AIRFLOW_HOME} -P
 
-RUN ${PIP_ALIAS} install --no-cache-dir ${AIRFLOW_MODULES}==${AIRFLOW_VERSION}
+RUN ${PIP_ALIAS} install --no-cache-dir ${AIRFLOW_MODULES}==${AIRFLOW_VERSION} \
+     && pip install 'redis>=2.10.5,<3'
 
 # Create directories so we can own them when we mount volumes
 RUN mkdir -p ${AIRFLOW_HOME}/logs && mkdir -p ${AIRFLOW_HOME}/dags

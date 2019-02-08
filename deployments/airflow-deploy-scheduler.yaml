@@ -38,7 +38,7 @@ items:
               valueFrom:
                 secretKeyRef:
                   key: database-connection-string
-                  name: airflow-secrets-celery
+                  name: airflow-redis-secrets-celery
             - name: AIRFLOW__CORE__LOAD_EXAMPLES
               value: 'False'
             - name: AIRFLOW__CORE__EXECUTOR
