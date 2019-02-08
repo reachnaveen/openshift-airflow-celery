@@ -83,7 +83,7 @@ ENV AIRFLOW_VERSION=1.10.0 \
     AIRFLOW_HOME="/usr/local/app" \
     AIRFLOW_GPL_UNIDECODE="True" \
     AIRFLOW_CMD="webserver" \
-    AIRFLOW_MODULES=apache-airflow['crypto','celery','kubernetes','postgres','s3','gcp_api','redis','mysql']
+    AIRFLOW_MODULES=apache-airflow['crypto','celery','kubernetes','postgres','s3','gcp_api','redis']
 
 ENV PYTHONPATH=${PYTHONPATH:+${PYTHONPATH}:}${AIRFLOW_HOME}
 
@@ -100,8 +100,8 @@ RUN virtualenv-$PYTHON_VERSION ${AIRFLOW_HOME} && \
     chown -R ${USER_ID}:0 ${AIRFLOW_HOME} && \
     fix-permissions ${AIRFLOW_HOME} -P
 
-RUN ${PIP_ALIAS} install --no-cache-dir ${AIRFLOW_MODULES}==${AIRFLOW_VERSION} && \
-    ${PIP_ALIAS} install 'redis>=2.10.5,<3'
+RUN ${PIP_ALIAS} install --no-cache-dir ${AIRFLOW_MODULES}==${AIRFLOW_VERSION}
+RUN ${PIP_ALIAS} install 'redis>=2.10.5,<3'
 
 # Create directories so we can own them when we mount volumes
 RUN mkdir -p ${AIRFLOW_HOME}/logs && mkdir -p ${AIRFLOW_HOME}/dags
