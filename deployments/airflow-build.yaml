@@ -18,7 +18,7 @@ items:
     
     source: 
       git:
-        uri: "https://github.com/reachnaveen/openshift-airflow-celery.git"
+        uri: "https://github.com/reachnaveen/openshift-airflow-celery"
         ref: "master"
       contextDir: "airflow"
     
@@ -39,4 +39,4 @@ items:
     annotations:
       description: Fedora 28 based Apache Airflow image
       tags: fedora, airflow
-    name: 'airflow'
+    name: airflow

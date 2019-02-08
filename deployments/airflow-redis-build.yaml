@@ -10,6 +10,11 @@ items:
     
     runPolicy: "Serial" 
     
+    triggers:
+      - type: ConfigChange
+      - github:
+          secret: airflow
+        type: GitHub    
     
     source: 
       git:

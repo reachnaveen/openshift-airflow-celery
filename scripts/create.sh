@@ -16,9 +16,11 @@ oc adm policy add-role-to-user podlogsreader system:serviceaccount:airflow-celer
 
 # imagestream builds
 oc create -f deployments/airflow-build.yaml -n $PROJECT_NAME
+oc create -f deployments/airflow-redis-build.yaml -n $PROJECT_NAME
 
 # # infrastructure
 oc create -f deployments/airflow-database.yaml -n $PROJECT_NAME
+oc create -f deployments/airflow-redis.yaml -n $PROJECT_NAME
 
 # services
 oc create -f deployments/airflow-deploy-webserver.yaml -n $PROJECT_NAME
