@@ -30,11 +30,11 @@ items:
             livenessProbe:
               initialDelaySeconds: 30
               tcpSocket:
-                port: 5432
+                port: 6379
               timeoutSeconds: 1
             name: redis
             ports:
-              - containerPort: 5432
+              - containerPort: 6379
             readinessProbe:
               exec:
                 command:
