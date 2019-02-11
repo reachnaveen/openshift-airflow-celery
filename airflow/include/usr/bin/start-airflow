@@ -5,8 +5,6 @@ set -e
 # patch /etc/passwd file first
 /usr/bin/generate-container-user
 
-# make sure we have all the folders
-mkdir -p $AIRFLOW_HOME/dags && mkdir -p $AIRFLOW_HOME/logs
 
 TRY_LOOP="20"
 
