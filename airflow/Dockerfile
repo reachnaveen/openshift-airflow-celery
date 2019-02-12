@@ -105,7 +105,8 @@ RUN ${PIP_ALIAS} install --no-cache-dir ${AIRFLOW_MODULES}==${AIRFLOW_VERSION} &
     ${PIP_ALIAS} install pytz && \
     ${PIP_ALIAS} install pyOpenSSL && \
     ${PIP_ALIAS} install ndg-httpsclient && \
-    ${PIP_ALIAS} install pyasn1 
+    ${PIP_ALIAS} install pyasn1 && \
+    ${PIP_ALIAS} install 'redis>=2.10.5,<3'
 
 # Create directories so we can own them when we mount volumes
 RUN mkdir -p ${AIRFLOW_HOME}/logs && mkdir -p ${AIRFLOW_HOME}/dags
