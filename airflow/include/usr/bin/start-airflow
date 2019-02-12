@@ -33,9 +33,6 @@ export \
 # patch /etc/passwd file first
 /usr/bin/generate-container-user
 
-# make sure we have all the folders
-#mkdir -p $AIRFLOW_HOME/dags && mkdir -p $AIRFLOW_HOME/logs
-
 # Load DAGs exemples (default: Yes)
 if [[ -z "$AIRFLOW__CORE__LOAD_EXAMPLES" && "${LOAD_EX:=n}" == n ]]
 then
@@ -78,29 +75,14 @@ if [ "$AIRFLOW__CORE__EXECUTOR" = "CeleryExecutor" ]; then
   # wait_for_port "Redis" "$REDIS_HOST" "$REDIS_PORT"
 fi
 
-case "$1" in
-  webserver)
-    airflow initdb
-    if [ "$AIRFLOW__CORE__EXECUTOR" = "LocalExecutor" ]; then
-      # With the "Local" executor it should all run in one container.
-      airflow scheduler &
-    fi
-    exec airflow webserver
-    ;;
-  worker|scheduler)
-    # To give the webserver time to run initdb.
-    sleep 10
-    exec airflow "$@"
-    ;;
-  flower)
-    sleep 10
-    exec airflow "$@"
-    ;;
-  version)
-    exec airflow "$@"
-    ;;
-  *)
-    # The command is something like bash, not an airflow subcommand. Just run it in the right environment.
-    exec "$@"
-    ;;
-esac
+# make sure we have all the folders
+mkdir -p $AIRFLOW_HOME/dags && mkdir -p $AIRFLOW_HOME/logs
+
+if [[ -n $AIRFLOW__CORE__SQL_ALCHEMY_CONN  ]] && [[ $AIRFLOW_CMD =~ ^(webserver|scheduler|worker)$ ]]; then
+  echo " ---> Initializing airflow database..."
+  airflow initdb || true
+fi
+
+# execute airflow
+echo " ---> Starting airflow $AIRFLOW_CMD ..."
+airflow $AIRFLOW_CMD
