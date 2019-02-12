@@ -34,7 +34,7 @@ export \
 /usr/bin/generate-container-user
 
 # make sure we have all the folders
-mkdir -p $AIRFLOW_HOME/dags && mkdir -p $AIRFLOW_HOME/logs
+#mkdir -p $AIRFLOW_HOME/dags && mkdir -p $AIRFLOW_HOME/logs
 
 # Load DAGs exemples (default: Yes)
 if [[ -z "$AIRFLOW__CORE__LOAD_EXAMPLES" && "${LOAD_EX:=n}" == n ]]
