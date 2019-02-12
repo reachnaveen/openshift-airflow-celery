@@ -100,7 +100,12 @@ RUN virtualenv-$PYTHON_VERSION ${AIRFLOW_HOME} && \
     chown -R ${USER_ID}:0 ${AIRFLOW_HOME} && \
     fix-permissions ${AIRFLOW_HOME} -P
 
-RUN ${PIP_ALIAS} install --no-cache-dir ${AIRFLOW_MODULES}==${AIRFLOW_VERSION}
+RUN ${PIP_ALIAS} install --no-cache-dir ${AIRFLOW_MODULES}==${AIRFLOW_VERSION} && \
+    ${PIP_ALIAS} install -U pip setuptools wheel && \
+    ${PIP_ALIAS} install pytz && \
+    ${PIP_ALIAS} install pyOpenSSL && \
+    ${PIP_ALIAS} install ndg-httpsclient && \
+    ${PIP_ALIAS} install pyasn1 
 
 # Create directories so we can own them when we mount volumes
 RUN mkdir -p ${AIRFLOW_HOME}/logs && mkdir -p ${AIRFLOW_HOME}/dags
